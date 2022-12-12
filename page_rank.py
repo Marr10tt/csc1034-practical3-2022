@@ -2,28 +2,41 @@ import sys
 import os
 import time
 import argparse
-from progress import Progress
 
-
-def load_graph(args):
+def load_graph(args):  
+    #stores the graph as a dictionary  
+    graph = {
+        
+    }
     """Load graph from text file
 
-    Parameters:
-    args -- arguments named tuple
-
     Returns:
-    A dict mapling a URL (str) to a list of target URLs (str).
+    A dict maping a URL (str) to a list of target URLs (str).
     """
     # Iterate through the file line by line
     for line in args.datafile:
         # And split each line into two URLs
         node, target = line.split()
-        raise RuntimeError("This function is not implemented yet.")
 
+        #updates the graph to contain the node and its targets
+        #checks to see if the node is already in dict, if not it adds it, if yes, appends the new target
+        if node in graph.keys():
+            graph[node].append(target)
+        else:
+            graph.update({node: []})
+            graph[node].append(target)
+
+    return graph
 
 def print_stats(graph):
-        """Print number of nodes and edges in the given graph"""
-        raise RuntimeError("This function is not implemented yet.")
+    #calculates the number of nodes
+    nodes = len(graph)
+    #calculate the number of edges
+    edges = 0
+    for key in graph:
+        edges+=len(graph[key])
+    print("Number of nodes:", nodes)
+    print("number of edges:", edges)
 
 
 def stochastic_page_rank(graph, args):
@@ -60,7 +73,7 @@ def distribution_page_rank(graph, args):
 
 
 parser = argparse.ArgumentParser(description="Estimates page ranks from link information")
-parser.add_argument('datafile', nargs='?', type=argparse.FileType('r'), default=sys.stdin,
+parser.add_argument('datafile', nargs='?', type=argparse.FileType('r'), default='school_web.txt',
                     help="Textfile of links among web pages as URL tuples")
 parser.add_argument('-m', '--method', choices=('stochastic', 'distribution'), default='stochastic',
                     help="selected page rank algorithm")
@@ -71,10 +84,11 @@ parser.add_argument('-n', '--number', type=int, default=20, help="number of resu
 
 if __name__ == '__main__':
     args = parser.parse_args()
+    print(args)
     algorithm = distribution_page_rank if args.method == 'distribution' else stochastic_page_rank
-
+    print ("H")
     graph = load_graph(args)
-
+    print("H")
     print_stats(graph)
 
     start = time.time()
