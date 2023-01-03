@@ -38,48 +38,32 @@ def print_stats(graph):
 
 
 def stochastic_page_rank(graph, args):
-    """Stochastic PageRank estimation
-
-    Returns:
-    A dict that assigns each page its hit frequency
-
-    This function estimates the Page Rank by counting how frequently
+    """This function estimates the Page Rank by counting how frequently
     a random walk that starts on a random node will after n_steps end
     on each node of the given graph.
     """
 
-    #stores the objects of each node (stores hit count, name, and pagerank)
-    nodeList = []
-
-    #stores each node as a string and its corresponding rank
-    rankDict = {
-
-    }
-
-    #class to store information regarding each node
-    class node:
-        def __init__(self, name):
-            self.name = name
-            self.pageRank = 0.0
-            self.hitCount = 0
+    #stores each node and its hit count
+    nodeList = {}
     
     #procedurally creates node classes and adds them to a list
     for keys in graph:
-        a = str(keys)
-        i = node(a)
-        nodeList.append(i)
+        nodeList.update({keys : 0})
     
     ##random walkers section
-    n = 2
+    n = 5000
     for i in range (0, n):
         currentNode = random.choice(list(graph))
-        print(currentNode)
         for x in range (0, n):
             currentNode = random.choice(graph[currentNode])
-            print(currentNode)
+        nodeList[currentNode] +=1
 
-    raise RuntimeError("This function is not implemented yet.")
+    for keys in nodeList:
+        nodeList[keys] = nodeList[keys]/n
+        print(nodeList[keys])
 
+    #returns the dictionary containing each node on the graph and its corresponding page rank
+    return nodeList
 
 def distribution_page_rank(graph, args):
     """Probabilistic PageRank estimation
