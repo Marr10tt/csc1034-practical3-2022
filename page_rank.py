@@ -76,11 +76,16 @@ def distribution_page_rank(graph, args):
     }
 
     for keys in graph:
-        nodeList.update({keys : 1/len(graph)})
-
+        nodeList.update({keys : 0})
     
+    #main loop
+    for i in range (0, args.steps):
+        for keys in nodeList:
 
-    raise RuntimeError("This function is not implemented yet.")
+            nodeList[keys] += (1/len(graph))/len(graph[keys])
+
+    print(nodeList)
+
 
 ## additional arguments passed, defaults set as necessary
 parser = argparse.ArgumentParser(description="Estimates page ranks from link information")
