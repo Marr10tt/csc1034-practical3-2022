@@ -2,6 +2,7 @@ import sys
 import os
 import time
 import argparse
+import random
 
 #loads the graph by reading the text file and inputting data to a dictionary
 def load_graph(args):  
@@ -39,10 +40,6 @@ def print_stats(graph):
 def stochastic_page_rank(graph, args):
     """Stochastic PageRank estimation
 
-    Parameters:
-    graph -- a graph object as returned by load_graph()
-    args -- arguments named tuple
-
     Returns:
     A dict that assigns each page its hit frequency
 
@@ -50,6 +47,28 @@ def stochastic_page_rank(graph, args):
     a random walk that starts on a random node will after n_steps end
     on each node of the given graph.
     """
+
+    #stores the objects of each node (stores hit count, name, and pagerank)
+    nodeList = []
+
+    #stores each node as a string and its corresponding rank
+    rankDict = {
+
+    }
+
+    #class to store information regarding each node
+    class node:
+        def __init__(self, name):
+            self.name = name
+            self.hits = 0.0
+    
+    #procedurally creates node classes and adds them to a list
+    for keys in graph:
+        a = str(keys) + "-node"
+        i = node(a)
+        nodeList.append(i)
+    
+
     raise RuntimeError("This function is not implemented yet.")
 
 
@@ -83,9 +102,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
     algorithm = distribution_page_rank if args.method == 'distribution' else stochastic_page_rank
-    print ("H")
     graph = load_graph(args)
-    print("H")
     print_stats(graph)
 
     start = time.time()
