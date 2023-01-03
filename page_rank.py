@@ -3,16 +3,12 @@ import os
 import time
 import argparse
 
+#loads the graph by reading the text file and inputting data to a dictionary
 def load_graph(args):  
     #stores the graph as a dictionary  
     graph = {
         
     }
-    """Load graph from text file
-
-    Returns:
-    A dict maping a URL (str) to a list of target URLs (str).
-    """
     # Iterate through the file line by line
     for line in args.datafile:
         # And split each line into two URLs
@@ -28,6 +24,7 @@ def load_graph(args):
 
     return graph
 
+#prints out the statistics of the graph (number of nodes and edges)
 def print_stats(graph):
     #calculates the number of nodes
     nodes = len(graph)
@@ -71,7 +68,7 @@ def distribution_page_rank(graph, args):
     """
     raise RuntimeError("This function is not implemented yet.")
 
-
+## additional arguments passed, defaults set as necessary
 parser = argparse.ArgumentParser(description="Estimates page ranks from link information")
 parser.add_argument('datafile', nargs='?', type=argparse.FileType('r'), default='school_web.txt',
                     help="Textfile of links among web pages as URL tuples")
@@ -81,7 +78,7 @@ parser.add_argument('-r', '--repeats', type=int, default=1_000_000, help="number
 parser.add_argument('-s', '--steps', type=int, default=100, help="number of steps a walker takes")
 parser.add_argument('-n', '--number', type=int, default=20, help="number of results shown")
 
-
+##main "parent" function where all required functions are called
 if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
