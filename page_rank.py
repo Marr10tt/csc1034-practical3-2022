@@ -2,6 +2,10 @@ import sys
 import time
 import argparse
 import random
+from functools import wraps 
+import threading
+
+nodeList = {}
 
 #loads the graph by reading the text file and inputting data to a dictionary
 def load_graph(args):  
@@ -35,11 +39,24 @@ def print_stats(graph):
     print("Number of nodes:", nodes)
     print("number of edges:", edges)
 
+def memoize(func):
+    cache = {}
 
-def stochastic_page_rank(graph, args):
-    #stores each node and its hit count
-    nodeList = {}
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        key = str(args)+str(kwargs)
+
+        if key not in cache:
+            cache[key] = func(*args, **kwargs)
+
+        return cache[key]
     
+    return wrapper
+
+@memoize
+def stochastic_page_rank(graph, args):
+    global nodeList
+
     #procedurally creates node classes and adds them to a list
     for keys in graph:
         nodeList.update({keys : 0})
@@ -47,17 +64,13 @@ def stochastic_page_rank(graph, args):
     ##random walkers section
 
     #loops for the amount of walkers currently active
-    for i in range (0, args.repeats):
+    for i in range (0, int(args.repeats/8)):
         currentNode = random.choice(list(graph))
         nodeList[currentNode]+=1
         #loops for a walkers steps
         for x in range (0, args.steps):
             currentNode = random.choice(graph[currentNode])
             nodeList[currentNode]+=1
-
-    #calculates page rank for each node using n and the amount of keys
-    for keys in nodeList:
-        nodeList[keys] = nodeList[keys]/args.repeats
 
     #returns the dictionary containing each node on the graph and its corresponding page rank
     return nodeList
@@ -94,12 +107,32 @@ parser.add_argument('-n', '--number', type=int, default=20, help="number of resu
 if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
-    algorithm = distribution_page_rank  if args.method == 'distribution' else stochastic_page_rank
+    algorithm = distribution_page_rank  #if args.method == 'distribution' else stochastic_page_rank
     graph = load_graph(args)
     print_stats(graph)
 
     start = time.time()
     ranking = algorithm(graph, args)
+    if algorithm != distribution_page_rank:
+        t1 = threading.Thread(target=stochastic_page_rank, args=(graph, args))
+        t2 = threading.Thread(target=stochastic_page_rank, args=(graph, args))
+        t3 = threading.Thread(target=stochastic_page_rank, args=(graph, args))
+        t4 = threading.Thread(target=stochastic_page_rank, args=(graph, args))
+        t5 = threading.Thread(target=stochastic_page_rank, args=(graph, args))
+        t6 = threading.Thread(target=stochastic_page_rank, args=(graph, args))
+        t7 = threading.Thread(target=stochastic_page_rank, args=(graph, args))
+        t8 = threading.Thread(target=stochastic_page_rank, args=(graph, args))
+        t1.start()
+        t2.start()
+        t3.start()
+        t4.start()
+        t5.start()
+        t6.start()
+        t7.start()
+        t8.start()
+    #calculates page rank for each node using n and the amount of keys
+    for keys in nodeList:
+        nodeList[keys] = nodeList[keys]/args.repeats
     stop = time.time()
     time = stop - start
 
