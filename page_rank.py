@@ -60,14 +60,23 @@ def stochastic_page_rank(graph, args):
     class node:
         def __init__(self, name):
             self.name = name
-            self.hits = 0.0
+            self.pageRank = 0.0
+            self.hitCount = 0
     
     #procedurally creates node classes and adds them to a list
     for keys in graph:
-        a = str(keys) + "-node"
+        a = str(keys)
         i = node(a)
         nodeList.append(i)
     
+    ##random walkers section
+    n = 2
+    for i in range (0, n):
+        currentNode = random.choice(list(graph))
+        print(currentNode)
+        for x in range (0, n):
+            currentNode = random.choice(graph[currentNode])
+            print(currentNode)
 
     raise RuntimeError("This function is not implemented yet.")
 
