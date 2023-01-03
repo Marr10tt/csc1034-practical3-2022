@@ -38,11 +38,6 @@ def print_stats(graph):
 
 
 def stochastic_page_rank(graph, args):
-    """This function estimates the Page Rank by counting how frequently
-    a random walk that starts on a random node will after n_steps end
-    on each node of the given graph.
-    """
-
     #stores each node and its hit count
     nodeList = {}
     
@@ -51,16 +46,19 @@ def stochastic_page_rank(graph, args):
         nodeList.update({keys : 0})
     
     ##random walkers section
-    n = 5000
-    for i in range (0, n):
-        currentNode = random.choice(list(graph))
-        for x in range (0, n):
-            currentNode = random.choice(graph[currentNode])
-        nodeList[currentNode] +=1
 
+    #loops for the amount of walkers currently active
+    for i in range (0, args.repeats):
+        currentNode = random.choice(list(graph))
+        nodeList[currentNode]+=1
+        #loops for a walkers steps
+        for x in range (0, args.steps):
+            currentNode = random.choice(graph[currentNode])
+            nodeList[currentNode]+=1
+
+    #calculates page rank for each node using n and the amount of keys
     for keys in nodeList:
-        nodeList[keys] = nodeList[keys]/n
-        print(nodeList[keys])
+        nodeList[keys] = nodeList[keys]/args.repeats
 
     #returns the dictionary containing each node on the graph and its corresponding page rank
     return nodeList
