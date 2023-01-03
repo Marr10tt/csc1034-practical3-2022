@@ -64,18 +64,22 @@ def stochastic_page_rank(graph, args):
     return nodeList
 
 def distribution_page_rank(graph, args):
-    """Probabilistic PageRank estimation
-
-    Parameters:
-    graph -- a graph object as returned by load_graph()
-    args -- arguments named tuple
-
+    """
     Returns:
     A dict that assigns each page its probability to be reached
 
     This function estimates the Page Rank by iteratively calculating
     the probability that a random walker is currently on any node.
     """
+    nodeList = {
+
+    }
+
+    for keys in graph:
+        nodeList.update({keys : 1/len(graph)})
+
+    
+
     raise RuntimeError("This function is not implemented yet.")
 
 ## additional arguments passed, defaults set as necessary
@@ -92,7 +96,7 @@ parser.add_argument('-n', '--number', type=int, default=20, help="number of resu
 if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
-    algorithm = distribution_page_rank if args.method == 'distribution' else stochastic_page_rank
+    algorithm = distribution_page_rank #if args.method == 'distribution' else stochastic_page_rank
     graph = load_graph(args)
     print_stats(graph)
 
