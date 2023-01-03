@@ -1,5 +1,4 @@
 import sys
-import os
 import time
 import argparse
 import random
@@ -64,27 +63,21 @@ def stochastic_page_rank(graph, args):
     return nodeList
 
 def distribution_page_rank(graph, args):
-    """
-    Returns:
-    A dict that assigns each page its probability to be reached
-
-    This function estimates the Page Rank by iteratively calculating
-    the probability that a random walker is currently on any node.
-    """
     nodeList = {
 
     }
 
+    #assigns each node a name and value in the nodeList dict
     for keys in graph:
-        nodeList.update({keys : 0})
+        nodeList.update({keys : int(0)})
     
     #main loop
+    i = int(0)
     for i in range (0, args.steps):
         for keys in nodeList:
-
             nodeList[keys] += (1/len(graph))/len(graph[keys])
 
-    print(nodeList)
+    return nodeList
 
 
 ## additional arguments passed, defaults set as necessary
@@ -101,7 +94,7 @@ parser.add_argument('-n', '--number', type=int, default=20, help="number of resu
 if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
-    algorithm = distribution_page_rank #if args.method == 'distribution' else stochastic_page_rank
+    algorithm = distribution_page_rank  if args.method == 'distribution' else stochastic_page_rank
     graph = load_graph(args)
     print_stats(graph)
 
